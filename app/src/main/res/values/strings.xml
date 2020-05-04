@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">CurrencyConverter</string>
+    <string name="currency_converter">Currency Converter</string>
+    <string name="please_enter_the_input_amount_and_currency">please enter the input amount and currency</string>
+    <string name="please_enter_the_input_amount_and_select_the_currency">please enter the input amount and select the currency</string>
+    <string name="please_select_the_currency_for_you_want_to_convert_to">please select the currency for you want to convert to</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="confirm">Confirm</string>
+    <string name="result">Result</string>
 </resources>
