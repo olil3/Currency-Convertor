@@ -7,4 +7,8 @@
     <string name="enter_amount">Enter amount</string>
     <string name="confirm">Confirm</string>
     <string name="result">Result</string>
+    <string name="welcome_to_our_currency_convertor_press_the_button_below_and_begin_converting">Welcome to our currency convertor!!! Press the button below and begin converting!!!</string>
+    <string name="welcome_to_our_currency_converter_press_the_button_below_and_begin_converting">welcome to our currency converter!!! press the button below and begin converting!!!</string>
+    <string name="Welcome_to_our_currency_converter_press_the_button_below_and_begin_converting">intro_text</string>
+    <string name="begin_converting">Begin converting</string>
 </resources>
