@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">CurrencyConverter</string>
+    <string name="currency_converter">Currency Converter</string>
+    <string name="please_enter_the_input_amount_and_currency">please enter the input amount and currency</string>
+    <string name="please_enter_the_input_amount_and_select_the_currency">please enter the input amount and select the currency</string>
+    <string name="please_select_the_currency_for_you_want_to_convert_to">please select the currency for you want to convert to</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="confirm">Confirm</string>
+    <string name="result">Result</string>
+    <string name="welcome_to_our_currency_convertor_press_the_button_below_and_begin_converting">Welcome to our currency convertor!!! Press the button below and begin converting!!!</string>
+    <string name="welcome_to_our_currency_converter_press_the_button_below_and_begin_converting">welcome to our currency converter!!! press the button below and begin converting!!!</string>
+    <string name="Welcome_to_our_currency_converter_press_the_button_below_and_begin_converting">intro_text</string>
+    <string name="begin_converting">Begin converting</string>
 </resources>

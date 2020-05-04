@@ -4,15 +4,125 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.leboys.currencyconverter.MainActivity"
+    android:background="@drawable/backgroundforCC"
+    >
 
-    <TextView
+    <EditText
+        android:id="@+id/inputAmount"
+        android:layout_width="252dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="95dp"
+        android:layout_marginEnd="143dp"
+        android:layout_marginBottom="460dp"
+        android:ems="10"
+        android:hint="@string/enter_amount"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info_view" />
+
+    <Spinner
+        android:id="@+id/inputSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="159dp"
+        android:layout_marginEnd="49dp"
+        android:layout_marginBottom="450dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/inputAmount"
+        app:layout_constraintTop_toBottomOf="@+id/info_view" />
+
+    <Spinner
+        android:id="@+id/outputSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="181dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="182dp"
+        android:layout_marginBottom="270dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info2" />
+
+    <TextView
+        android:id="@+id/info_view"
+        android:layout_width="274dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="69dp"
+        android:layout_marginTop="81dp"
+        android:layout_marginEnd="69dp"
+        android:layout_marginBottom="82dp"
+        android:text="@string/currency_converter"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:gravity="center_horizontal|center_vertical"
+        app:layout_constraintBottom_toTopOf="@+id/inputAmount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/info1"
+        android:layout_width="202dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="111dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="103dp"
+        android:layout_marginBottom="45dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/please_enter_the_input_amount_and_select_the_currency"
+        app:layout_constraintBottom_toTopOf="@+id/inputAmount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info_view" />
+
+    <TextView
+        android:id="@+id/info2"
+        android:layout_width="199dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="106dp"
+        android:layout_marginBottom="35dp"
+        android:text="@string/please_select_the_currency_for_you_want_to_convert_to"
+        android:gravity="center_horizontal|center_vertical"
+        app:layout_constraintBottom_toTopOf="@+id/outputSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputAmount" />
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="202dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="103dp"
+        android:layout_marginBottom="150dp"
+        android:text="@string/confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/outputSpinner" />
+
+    <EditText
+        android:id="@+id/output"
+        android:layout_width="325dp"
+        android:layout_height="59dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginBottom="53dp"
+        android:ems="10"
+        android:hint="@string/result"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirm" />
 </androidx.constraintlayout.widget.ConstraintLayout>
