@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    private Button button;
+
     /** CurrencyUtils object to be used within the class*/
     private CurrencyUtils mCurrencyObj = new CurrencyUtils(this);
 
@@ -49,15 +49,13 @@ public class MainActivity extends AppCompatActivity {
         // Get the JsonObject for the currency codes.
         JsonObject currencyCode = mCurrencyObj.getCurrencyCodes();
 
-        button = (Button) findViewById(R.id.exchange_rates);
-        button.setOnClickListener(new View.OnClickListener() {
+        final Button historicalButton = findViewById(R.id.exchange_rates);
+        historicalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openActivityExchangeRates();
             }
         });
-
-
 
         // Initialize context and RequestQueue for Web GET requests
         final Context mContext = this;
@@ -99,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                         submitButton.setEnabled(true);
                     }
                 } catch (NumberFormatException e) {
-                    Log.e("NFE", e.getMessage());
+                    Log.e("NFE", Objects.requireNonNull(e.getMessage()));
                     Toast.makeText(mContext,
                             "The amount you've entered is too large to process. Please choose a smaller value.",
                             Toast.LENGTH_SHORT).show();

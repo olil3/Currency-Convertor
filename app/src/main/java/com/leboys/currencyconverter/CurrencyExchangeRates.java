@@ -34,70 +34,93 @@ import java.util.Objects;
 
 public class CurrencyExchangeRates extends AppCompatActivity {
 
-    TextView mtv;
-    Button selectDate;
-    Calendar c;
-    DatePickerDialog dpd;
-    CurrencyUtils mCurrencyUtilsObj = new CurrencyUtils(this);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency_exchange_rates);
+
+        // Initialize a few UI components and our CurrencyUtils object
+        final TextView exchangeRate = findViewById(R.id.dateSelected);
+        final Button selectDate = findViewById(R.id.date);
+        final CurrencyUtils mCurrencyUtilsObj = new CurrencyUtils(this);
+
+        // Get the currency codes JsonObject
         JsonObject mCurrencyData = mCurrencyUtilsObj.getCurrencyCodes();
 
+        // Initialize a few more UI components
         final Spinner toCurrency = findViewById(R.id.targetCurrency);
         final Spinner fromCurrency = findViewById(R.id.baseCurrency);
 
+        // Populate the Spinners and initialize the RequestQueue.
         populateCurrencies(toCurrency, fromCurrency, mCurrencyData, this);
         final RequestQueue queue = Volley.newRequestQueue(this);
 
-        mtv = (TextView) findViewById(R.id.dateSelected);
-        selectDate = (Button) findViewById(R.id.date);
+        // Create a DateSelectorDialog to pick the date for the exchange rate.
         selectDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                c = Calendar.getInstance();
-                int day = c.get(Calendar.DAY_OF_MONTH);
-                int month = c.get(Calendar.MONTH);
-                int year = c.get(Calendar.YEAR);
+                // Initialize a Calendar object for the DatePickerDialog
+                final Calendar calendarInstance = Calendar.getInstance();
+                final int day = calendarInstance.get(Calendar.DAY_OF_MONTH);
+                final int month = calendarInstance.get(Calendar.MONTH);
+                final int year = calendarInstance.get(Calendar.YEAR);
 
-                dpd = new DatePickerDialog(CurrencyExchangeRates.this, new DatePickerDialog.OnDateSetListener() {
+                // Finally create the DatePickerDialog
+                final DatePickerDialog datePickerDialog = new DatePickerDialog(CurrencyExchangeRates.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int mYear, int mMonth, int dayOfMonth) {
+
+                        // Get the currency codes of the currencies selected in the spinners.
                         final String countryCodeFrom = fromCurrency.getSelectedItem().toString().substring(0, 3).trim();
                         final String countryCodeTo = toCurrency.getSelectedItem().toString().substring(0, 3).trim();
-                        String date = mYear + "-" + (mMonth + 1) + "-" + dayOfMonth;
-                        String webUrl = mCurrencyUtilsObj.getHistoricCurrency(countryCodeFrom, countryCodeTo, date);
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, webUrl,
-                                new Response.Listener<String>() {
-                                    @SuppressLint("SetTextI18n")
-                                    @Override
-                                    public void onResponse(String response) {
-                                        // response is the Json Response from the server with the exchange rates
 
-                                        // Get the converted amount using the CurrencyUtils Object
-                                        String convertedAmount = mCurrencyUtilsObj.convertCurrency(response, countryCodeFrom, countryCodeTo, String.valueOf(1));
+                        // Save API calls by handling calls with the same currency codes.
+                        if (countryCodeFrom.equals(countryCodeTo)) {
+                            exchangeRate.setText(("Exchange Rate: " + 1 + " " + countryCodeFrom));
+                        } else {
+                            // Get the date and URL using our currencyUtils object.
+                            String date = mCurrencyUtilsObj.convertDate(year, month + 1, day);
+                            StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                                    mCurrencyUtilsObj.getHistoricCurrency(countryCodeFrom, countryCodeTo, date),
+                                    new Response.Listener<String>() {
+                                        @SuppressLint("SetTextI18n")
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response is the Json Response from the server with the exchange rates
+                                            // Get the converted amount using the CurrencyUtils Object
+                                            String convertedAmount = mCurrencyUtilsObj.convertCurrency(response, countryCodeFrom, countryCodeTo, String.valueOf(1));
 
-                                        // Suffix the target Currency Code to the amount for better readability.
-                                        convertedAmount = convertedAmount + " " + countryCodeTo;
+                                            // Suffix the target Currency Code to the amount for better readability.
+                                            convertedAmount = convertedAmount + " " + countryCodeTo;
 
-                                        // Set the value of the result to the converted amount.
-                                        mtv.setText("Converted Amount: " + convertedAmount);
+                                            // Set the value of the result to the converted amount.
+                                            exchangeRate.setText("Exchange Rate: " + convertedAmount);
+                                        }
+                                    }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    String TAG = "WebAPIGetErrorExchange";
+                                    try {
+                                        int errorCode = error.networkResponse.statusCode;
+                                        if (errorCode == 101) {
+                                            // This specific error entails that we've reached the maximum number of API hits for the month.
+                                            Log.e(TAG, "API Monthly limit reached.");
+                                        }
+                                    } catch (Exception e) {
+                                        // Handle any error in getting a response. Can be viewed in the error section of logcat.
+                                        Log.e(TAG, Objects.requireNonNull(error.getMessage()));
                                     }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // Handle any error in getting a response. Can be viewed in the error section of logcat.
-                                Log.e("error", Objects.requireNonNull(error.getMessage()));
-                            }
-                        });
-                        // Add this request to the queue. Enables caching.
-                        queue.add(stringRequest);
+                                }
+                            });
+                            // Add this request to the queue. Enables caching.
+                            queue.add(stringRequest);
+                        }
                     }
                 }, day, month, year);
-                dpd.show();
+                // Set Minimum date to 1st Jan 1999 (API Maximum).
+                datePickerDialog.getDatePicker().setMinDate(Long.parseLong("915192000000"));
+                datePickerDialog.show();
             }
         });
     }

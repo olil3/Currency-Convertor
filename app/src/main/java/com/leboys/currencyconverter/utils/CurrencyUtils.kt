@@ -68,6 +68,28 @@ class CurrencyUtils(private val mContext : Context) {
      * @return the URL for historic exchange rate Web Requests
      */
     fun getHistoricCurrency(from: String, to: String, date: String): String {
-        return "$DOMAIN_ID/api/$date?access_key=$API_KEY&symbols=$from,$to"
+        return "$DOMAIN_ID/$date?access_key=$API_KEY&symbols=$from,$to"
+    }
+
+    /**
+     * Function to return a date in the form of a string.
+     * @param year : Year of the date.
+     * @param month : Month of the date.
+     * @param day : Day of the date.
+     * @return date in the format YYYY-MM-DD
+     */
+    fun convertDate(year:Int, month:Int, day:Int): String {
+        var toReturn = year.toString()
+        toReturn += if (month < 10) {
+            "-0$month"
+        } else {
+            "-$month"
+        }
+        toReturn += if (day < 10) {
+            "-0$day"
+        } else  {
+            "-$day"
+        }
+        return toReturn
     }
 }
