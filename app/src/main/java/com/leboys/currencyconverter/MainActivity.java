@@ -25,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.leboys.currencyconverter.utils.CurrencyUtils;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     /** CurrencyUtils object to be used within the class*/
     private CurrencyUtils mCurrencyObj = new CurrencyUtils(this);
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         final Context mContext = this;
         final RequestQueue queue = Volley.newRequestQueue(mContext);
 
+        // Initialize our UI components, such as Spinners and EditText views.
         final Spinner fromCurrency = findViewById(R.id.inputSpinner);
         final Spinner toCurrency = findViewById(R.id.outputSpinner);
         final EditText amountToConvert = findViewById(R.id.inputAmount);
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (NumberFormatException e) {
                     Log.e("NFE", e.getMessage());
                     Toast.makeText(mContext,
-                            "The amount you've entered is too large to process. Please choose a smaller value. ",
+                            "The amount you've entered is too large to process. Please choose a smaller value.",
                             Toast.LENGTH_SHORT).show();
                     submitButton.setEnabled(false);
                 }
@@ -101,7 +104,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Handle clicks only if there is an amount in the amount text box.
                 if (amountToConvert.getText().length() != 0) {
+
                     // Get the selected currencies from the spinners and get their Currency Codes.
+                    // Substring being used as the format of the Spinner is already known.
+                    // Refer to the for-loop in the populateCurrencies method of MainActivity.
                     final String countryCodeFrom = ((String) fromCurrency.getSelectedItem()).substring(0, 3);
                     final String countryCodeTo = ((String) toCurrency.getSelectedItem()).substring(0, 3);
 
@@ -130,8 +136,17 @@ public class MainActivity extends AppCompatActivity {
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                // Handle any error in getting a response. Can be viewed in the error section of logcat.
-                                Log.e("error", Objects.requireNonNull(error.getMessage()));
+                                String TAG = "WebAPIGetError";
+                                try {
+                                    int errorCode = error.networkResponse.statusCode;
+                                    if (errorCode == 101) {
+                                        // This specific error entails that we've reached the maximum number of API hits for the month.
+                                        Log.e(TAG, "API Monthly limit reached.");
+                                    }
+                                } catch (Exception e) {
+                                    // Handle any error in getting a response. Can be viewed in the error section of logcat.
+                                    Log.e(TAG, Objects.requireNonNull(error.getMessage()));
+                                }
                             }
                         });
                         // Add this request to the queue. Enables caching.

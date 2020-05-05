@@ -5,8 +5,12 @@ import android.util.Log
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.io.InputStreamReader
+
 /** API Key for Fixer.io*/
 private const val API_KEY = "503b8bbc7f6a2c5f640238f0978120ce"
+
+/** Domain of our API GET Requests*/
+private const val DOMAIN_ID = "http://data.fixer.io/api"
 
 /**
  * Helper class to help aid the process of converting currencies.
@@ -36,7 +40,7 @@ class CurrencyUtils(private val mContext : Context) {
      * @return the URL for Web Requests
      */
     fun getConversionURL(from: String, to: String): String? {
-        return "http://data.fixer.io/api/latest?access_key=$API_KEY&symbols=$from,$to"
+        return "$DOMAIN_ID/latest?access_key=$API_KEY&symbols=$from,$to"
     }
 
     /**
@@ -64,6 +68,6 @@ class CurrencyUtils(private val mContext : Context) {
      * @return the URL for historic exchange rate Web Requests
      */
     fun getHistoricCurrency(from: String, to: String, date: String): String {
-        return "http://data.fixer.io/api/$date?access_key=$API_KEY&symbols=$from,$to"
+        return "$DOMAIN_ID/api/$date?access_key=$API_KEY&symbols=$from,$to"
     }
 }
