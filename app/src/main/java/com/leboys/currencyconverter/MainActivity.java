@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -35,16 +36,28 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+    private Button button;
     /** CurrencyUtils object to be used within the class*/
     private CurrencyUtils mCurrencyObj = new CurrencyUtils(this);
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Get the JsonObject for the currency codes.
         JsonObject currencyCode = mCurrencyObj.getCurrencyCodes();
+
+        button = (Button) findViewById(R.id.exchange_rates);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openActivityExchangeRates();
+            }
+        });
+
+
 
         // Initialize context and RequestQueue for Web GET requests
         final Context mContext = this;
@@ -155,6 +168,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    public void openActivityExchangeRates() {
+        Intent intent = new Intent(this, CurrencyExchangeRates.class);
+        startActivity(intent);
     }
 
     /**
