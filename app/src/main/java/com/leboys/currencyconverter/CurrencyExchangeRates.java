@@ -77,7 +77,7 @@ public class CurrencyExchangeRates extends AppCompatActivity {
 
                         // Save API calls by handling calls with the same currency codes.
                         if (countryCodeFrom.equals(countryCodeTo)) {
-                            exchangeRate.setText(("Exchange Rate: " + 1 + " " + countryCodeFrom));
+                            exchangeRate.setText(("Exchange Rate: " + 1 + " " + countryCodeFrom + " = " + 1 + " " + countryCodeFrom));
                         } else {
                             // Get the date and URL using our currencyUtils object.
                             String date = mCurrencyUtilsObj.convertDate(year, month + 1, day);
@@ -92,7 +92,7 @@ public class CurrencyExchangeRates extends AppCompatActivity {
                                             String convertedAmount = mCurrencyUtilsObj.convertCurrency(response, countryCodeFrom, countryCodeTo, String.valueOf(1));
 
                                             // Suffix the target Currency Code to the amount for better readability.
-                                            convertedAmount = convertedAmount + " " + countryCodeTo;
+                                            convertedAmount = 1 + " " + countryCodeFrom + " = " + convertedAmount + " " + countryCodeTo;
 
                                             // Set the value of the result to the converted amount.
                                             exchangeRate.setText("Exchange Rate: " + convertedAmount);
