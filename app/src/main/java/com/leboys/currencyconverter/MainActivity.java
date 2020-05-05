@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -75,10 +76,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() == 0) {
+                try {
+                    if (s.length() == 0 || Integer.parseInt(s.toString()) == 0) {
+                        submitButton.setEnabled(false);
+                    } else {
+                        submitButton.setEnabled(true);
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e("NFE", e.getMessage());
+                    Toast.makeText(mContext,
+                            "The amount you've entered is too large to process. Please choose a smaller value. ",
+                            Toast.LENGTH_SHORT).show();
                     submitButton.setEnabled(false);
-                } else {
-                    submitButton.setEnabled(true);
                 }
             }
         });
@@ -92,38 +101,42 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Handle clicks only if there is an amount in the amount text box.
                 if (amountToConvert.getText().length() != 0) {
-
                     // Get the selected currencies from the spinners and get their Currency Codes.
                     final String countryCodeFrom = ((String) fromCurrency.getSelectedItem()).substring(0, 3);
                     final String countryCodeTo = ((String) toCurrency.getSelectedItem()).substring(0, 3);
 
-                    // Create a Web GET request to get the currency exchange rate from the server.
-                    StringRequest stringRequest = new StringRequest(Request.Method.GET, mCurrencyObj
-                            .getConversionURL(countryCodeFrom, countryCodeTo),
-                            new Response.Listener<String>() {
-                                @SuppressLint("SetTextI18n")
-                                @Override
-                                public void onResponse(String response) {
-                                    // response is the Json Response from the server with the exchange rates
+                    // Do not waste API calls if the currency code is the same.
+                    if (countryCodeFrom.contains(countryCodeTo)) {
+                        out.setText("Converted Amount: " + amountToConvert.getText().toString().trim() + " " + countryCodeTo);
+                    } else {
+                        // Create a Web GET request to get the currency exchange rate from the server.
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET, mCurrencyObj
+                                .getConversionURL(countryCodeFrom, countryCodeTo),
+                                new Response.Listener<String>() {
+                                    @SuppressLint("SetTextI18n")
+                                    @Override
+                                    public void onResponse(String response) {
+                                        // response is the Json Response from the server with the exchange rates
 
-                                    // Get the converted amount using the CurrencyUtils Object
-                                    String convertedAmount = mCurrencyObj.convertCurrency(response, countryCodeFrom, countryCodeTo, amountToConvert.getText().toString().trim());
+                                        // Get the converted amount using the CurrencyUtils Object
+                                        String convertedAmount = mCurrencyObj.convertCurrency(response, countryCodeFrom, countryCodeTo, amountToConvert.getText().toString().trim());
 
-                                    // Suffix the target Currency Code to the amount for better readability.
-                                    convertedAmount = convertedAmount + " " + countryCodeTo;
+                                        // Suffix the target Currency Code to the amount for better readability.
+                                        convertedAmount = convertedAmount + " " + countryCodeTo;
 
-                                    // Set the value of the result to the converted amount.
-                                    out.setText("Converted Amount: " + convertedAmount);
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // Handle any error in getting a response. Can be viewed in the error section of logcat.
-                            Log.e("error", Objects.requireNonNull(error.getMessage()));
-                        }
-                    });
-                    // Add this request to the queue. Enables caching.
-                    queue.add(stringRequest);
+                                        // Set the value of the result to the converted amount.
+                                        out.setText("Converted Amount: " + convertedAmount);
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // Handle any error in getting a response. Can be viewed in the error section of logcat.
+                                Log.e("error", Objects.requireNonNull(error.getMessage()));
+                            }
+                        });
+                        // Add this request to the queue. Enables caching.
+                        queue.add(stringRequest);
+                    }
                 }
             }
         });
